@@ -18,7 +18,7 @@ DEFAULT_TOP_K = 5
 
 # Server settings
 HOST = os.getenv("HOST", "0.0.0.0")
-PORT = int(os.getenv("PORT", "8000"))
+PORT = int(os.getenv("PORT", "8237"))
 
 # Cache settings
 ENABLE_CACHE = os.getenv("ENABLE_CACHE", "True").lower() in ("true", "1", "t")

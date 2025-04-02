@@ -1,11 +1,12 @@
 import logging
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import time
 
 from app.api.routes import router as api_router
 from app.config import APP_NAME, API_PREFIX, DEBUG
+from app.auth import AuthMiddleware, verify_token
 
 # Configure logging
 logging.basicConfig(
@@ -31,9 +32,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Add API router
-app.include_router(api_router, prefix=API_PREFIX)
+# Add authentication middleware
+app.add_middleware(AuthMiddleware)
 
+# Add API router with authentication
+# All routes under /api will require API key
+app.include_router(
+    api_router, 
+    prefix=API_PREFIX,
+    dependencies=[Depends(verify_token)]
+)
 
 # Add middleware for request timing
 @app.middleware("http")
